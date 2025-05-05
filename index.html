@@ -1,0 +1,294 @@
+<html>
+    <head>
+        <meta charset = "utf-8">
+        <title>Hello Web3</title>	
+        <!-- Bootstrap 5 -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Web3.js -->
+  <script src="node_modules/web3/dist/web3.min.js"></script>
+       <script type="text/javascript" src="node_modules/web3/dist/web3.min.js">//載入 Web3.js 函式庫，這是用來與以太坊（Ethereum）區塊鏈互動的 JavaScript 函式庫。
+        //路徑是 node_modules/web3/dist/web3.min.js，這表示你必須先透過 npm 安裝過 Web3 才能正常運作。
+        </script> 
+        <style>
+           body.dark {
+      background-color: #1f2937;
+      color: white;
+    }
+    .dark input, .dark button {
+      background-color: #374151;
+      color: white;
+      border-color: #6b7280;
+    }
+     :root {
+      --bg-color: #f4f7fa;
+      --text-color: #333;
+      --card-bg: #fff;
+      --card-shadow: rgba(0, 0, 0, 0.1);
+      --highlight-color: #1386d3;
+      --border-color: #ccc;
+      --input-bg: #fff;
+    }
+
+    body.dark-mode {
+      --bg-color: #1e1e1e;
+      --text-color: #eee;
+      --card-bg: #2c2c2c;
+      --card-shadow: rgba(0, 0, 0, 0.3);
+      --highlight-color: #9b59b6;
+      --border-color: #444;
+      --input-bg: #3c3c3c;
+    }
+
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background-color: var(--bg-color);
+      color: var(--text-color);
+      margin: 40px;
+      transition: all 0.3s ease;
+    }
+
+    .container {
+      max-width: 600px;
+      margin: auto;
+    }
+
+    .card {
+      background-color: var(--card-bg);
+      padding: 20px 30px;
+      margin-bottom: 30px;
+      border-radius: 10px;
+      box-shadow: 0 4px 8px var(--card-shadow);
+      transition: all 0.3s ease;
+    }
+
+    input[type="text"], input[type="number"] {
+      width: 100%;
+      padding: 10px;
+      margin: 8px 0;
+      border: 1px solid var(--border-color);
+      background-color: var(--input-bg);
+      color: var(--text-color);
+      border-radius: 5px;
+      box-sizing: border-box;
+    }
+
+    button {
+      padding: 10px 16px;
+      background-color: var(--highlight-color);
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    button:hover {
+      opacity: 0.9;
+    }
+
+    p {
+      background-color: var(--input-bg);
+      padding: 10px;
+      border-left: 5px solid var(--highlight-color);
+      border-radius: 5px;
+      margin-top: 10px;
+      word-break: break-word;
+    }
+
+    .theme-toggle {
+      text-align: right;
+      margin-bottom: 20px;
+    }
+
+    .theme-toggle button {
+      background-color: transparent;
+      border: 2px solid var(--highlight-color);
+      color: var(--highlight-color);
+      padding: 8px 12px;
+      border-radius: 8px;
+      font-size: 14px;
+    }
+
+    .theme-toggle button:hover {
+      background-color: var(--highlight-color);
+      color: white;
+    }
+        </style>
+      </head>  
+
+        <script type="text/javascript">
+          
+          var web3 = new Web3(Web3.givenProvider || "http://127.0.0.1:7545"); //連接ganache的端口，初始化一個 Web3 物件。 Web3.givenProvider 是瀏覽器內部的 Ethereum 提供者，例如 MetaMask。 
+          // 如果沒有瀏覽器提供者，就用本地的 Ganache 節點（http://127.0.0.1:7545）作為備用。 這表示它支援你用 MetaMask，也能在本地測試用 Ganache。
+
+          async function start() {
+            const errorDiv = document.getElementById("errorMessage");
+
+          if (typeof window.ethereum === 'undefined') {
+          errorDiv.style.display = "block";
+          errorDiv.textContent = "⚠️ 請先安裝 MetaMask 擴充套件，才能使用此功能。";
+          return;
+          }
+
+            try {
+              const accounts = await ethereum.request({ method: 'eth_requestAccounts' });
+              const defaultAccount = accounts[0];
+              //let defaultAccount = await web3.eth.getCoinbase();  //定義一個非同步函數 start()，取得預設帳戶 defaultAccount 查詢這個帳戶的餘額（單位是 Wei）
+              let balance = await web3.eth.getBalance(defaultAccount);
+              
+              document.getElementById("account").textContent = defaultAccount;
+              document.getElementById("balance").textContent = web3.utils.fromWei(balance, "ether");
+              //var html_account = document.getElementById("account");//帳戶地址和餘額顯示在頁面上。 
+              //var html_balance = document.getElementById("balance");
+              html_account.textContent = defaultAccount;
+              html_balance.textContent = web3.utils.fromWei(balance, "ether"); //fromWei(balance, "ether")：將單位從 Wei（最小單位）轉成 Ether（ETH）
+            } catch(err) {
+              console.error("Error:", err);  //如果有錯誤（比如沒連上 MetaMask），就印出錯誤資訊。
+              errorDiv.style.display = "block";
+            }
+          }
+          
+          //window.addEventListener("load", start); //在網頁載入時，自動執行 start() 函數。
+          window.addEventListener('load', async () => {
+             if (typeof window.ethereum !== 'undefined') {
+                await start();
+           } else {
+               alert("請安裝 MetaMask！");
+         }
+      });
+
+
+        
+          async function sendTransaction() {
+          const toAddress = document.getElementById("toAddress").value; // 從輸入欄位取得收款地址
+          const status = document.getElementById("txStatus"); // 用來顯示交易狀態的 HTML 元素
+  
+    try {
+      const accounts = await web3.eth.getAccounts();  // 取得使用者的帳戶
+      const from = accounts[0]; // 通常是預設帳戶（第一個）
+
+      // 發送交易
+      const tx = await web3.eth.sendTransaction({
+        from: from,
+        to: toAddress,
+        value: web3.utils.toWei("0.01", "ether") // 將 0.01 ETH 轉成 Wei（最小單位）
+      });
+       
+      status.textContent = `✅ 成功！交易哈希：${tx.transactionHash}`;      // 顯示成功訊息與交易 hash
+    } catch (err) {
+      console.error("Transaction failed:", err);
+      status.textContent = `❌ 發送失敗：${err.message}`;
+    }
+  }
+
+  async function readValue() {
+    try {
+      const result = await contract.methods.get().call();  // 呼叫 get() 函式，不會花費 gas
+      document.getElementById("contractValue").textContent = "📥 目前儲存值：" + result;
+    } catch (err) {
+      console.error(err);
+    }
+  }
+  
+  async function writeValue() {
+    try {
+      const value = document.getElementById("newValue").value; // 從輸入欄位取得新值
+      const accounts = await web3.eth.getAccounts(); // 取得使用者帳戶
+  
+      const receipt = await contract.methods.set(value).send({ from: accounts[0] }); // 呼叫合約中的 set 函式
+      document.getElementById("writeStatus").textContent = "✅ 寫入成功！交易哈希：" + receipt.transactionHash; // 顯示成功訊息
+    } catch (err) {
+      console.error(err);
+      ddocument.getElementById("writeStatus").textContent = "❌ 寫入失敗：" + err.message;
+    }
+  }
+
+
+const contractABI = [ //合約 ABI 和地址
+    {
+      "constant": false,
+      "inputs": [{"name": "_value", "type": "uint256"}],
+      "name": "set",
+      "outputs": [],
+      "type": "function"
+    },
+    {
+      "constant": true,
+      "inputs": [],
+      "name": "get",
+      "outputs": [{"name": "", "type": "uint256"}],
+      "type": "function"
+    }
+  ];
+  
+  // 用你自己合約部署後的地址
+  const contractAddress = "0x44106369461AdC1Da05Ce0d30F11553DDf3351f7";
+  
+  const contract = new web3.eth.Contract(contractABI, contractAddress);   
+  
+        </script>
+      </head>
+    <body>
+      <body class="transition-colors duration-300">
+        <div class="container mt-5">
+      
+          <!-- 主標題與主題切換 -->
+          <div class="d-flex justify-content-between align-items-center mb-4">
+            <h1 class="text-3xl font-bold">🔗 Hello Web3</h1>
+          </div>
+      
+          <!-- 錯誤提示 -->
+          <div id="errorMessage" class="alert alert-danger d-none" role="alert"></div>
+      
+          <!-- 帳戶與餘額 -->
+          <div class="card mb-4">
+            <div class="card-body">
+              <h5 class="card-title">👤 帳戶資訊</h5>
+              <p>地址：<span id="account" class="font-mono"></span></p>
+              <p>餘額：<span id="balance" class="font-mono"></span> ETH</p>
+            </div>
+          </div>
+      
+          <!-- 發送交易 -->
+          <div class="card mb-4">
+            <div class="card-body">
+              <h5 class="card-title">💸 發送交易</h5>
+              <input type="text" id="toAddress" class="form-control mb-2" placeholder="收款地址" />
+              <button onclick="sendTransaction()" class="btn btn-primary">發送 0.01 ETH</button>
+              <p id="txStatus" class="mt-2 text-sm"></p>
+            </div>
+          </div>
+      
+          <!-- 合約互動 -->
+          <div class="card mb-4">
+            <div class="card-body">
+              <h5 class="card-title">📜 合約互動</h5>
+              <button onclick="readValue()" class="btn btn-secondary mb-2">讀取值</button>
+              <p id="contractValue"></p>
+      
+              <input type="number" id="newValue" class="form-control mb-2" placeholder="新值" />
+              <button onclick="writeValue()" class="btn btn-success">寫入值</button>
+              <p id="writeStatus" class="mt-2 text-sm"></p>
+            </div>
+          </div>
+      
+        </div>
+		<!-- <h3>發送交易</h3>
+		<input type="text" id="toAddress" placeholder="Recipient Address">
+		<button onclick="sendTransaction()">發送 0.01 ETH</button>
+		<p id="txStatus"></p>
+        <h1>帳戶: <span id="account"></span></h1>
+        <h3>你有 <span id="balance"></span> Ether</h3>
+        <h3>合約交互</h3>
+        <button onclick="readValue()">讀取值</button>
+        <p id="contractValue"></p>
+
+        <input type="number" id="newValue" placeholder="New Value">
+        <button onclick="writeValue()">寫入值</button>
+<p id="writeStatus"></p> -->
+    </body>
+</html>

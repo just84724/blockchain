@@ -1,0 +1,9 @@
+{
+  "dependencies": {
+    "web3": "^4.16.0"
+  },
+  "devDependencies": {
+    "ethers": "^6.13.5"
+  }
+  
+}
